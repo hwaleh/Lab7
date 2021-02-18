@@ -85,6 +85,13 @@
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchAll() {
         // TODO
+        //let result = window.prompt("enter url");
+        document.getElementById("recordForm").style.display='none';
+        document.getElementById("recordIDcontainer").style.display='none';
+        document.getElementById("output").innerText="";
+        fetch(document.getElementById("endpoint").value)
+          .then(response => response.json())
+          .then(data => document.getElementById("output").innerText=JSON.stringify(data));
       }
 
       // This function should fetch one entry from the given endpoint.
@@ -93,22 +100,66 @@
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchOne() {
         // TODO
+        document.getElementById("recordForm").style.display='none';
+        document.getElementById("recordIDcontainer").style.display='none';
+        document.getElementById("output").innerText="";
+        let result = window.prompt("enter post id");
+        fetch(document.getElementById("endpoint").value+"/"+result)
+          .then(response => response.json())
+          .then(data => document.getElementById("output").innerText=JSON.stringify(data));
       }
+      
 
       // This function should use fetch to create one entry in the given endpoint.
       // From the 4 CRUD actions, this is the CREATE action, and uses the POST http method.
       // The main difference from updateRecord() will be the URL you send data to; check
       // the writeup to view the URL pattern for create and update
-      function createRecord() {
+      function createRecord(param) {
         // TODO
+        if(param==='show'){
+          document.getElementById("output").innerText="";
+          document.getElementById("recordIDcontainer").style.display='none';
+          document.getElementById("recordForm").style.display='inline';
+          return;
+        }
+        fetch(document.getElementById("endpoint").value, {
+        method: 'post',
+        headers: {
+          "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+          },
+        body: `author=${document.getElementById("author").value}&title=${document.getElementById("title").value}`
+          
+        })
+        .then(data => data.json())
+        .then(val => document.getElementById("output").innerText=JSON.stringify(val))
+        //document.getElementById("output").innerText="{"author"}";
+        //console.log('create');
+        //document.getElementById("recordForm").style.display='none';
       }
 
       // This function should use fetch to update one existing entry in the given endpoint.
       // From the 4 CRUD actions, this is the UPDATE action, and uses the PUT http method.
       // The main difference from createRecord() will be the URL you send data to; check
       // the writeup to view the URL pattern for create and update
-      function updateRecord() {
+      function updateRecord(param) {
         // TODO
+        //console.log(document.getElementById("recordID"));
+        if(param==='show'){
+          document.getElementById("output").innerText="";
+          document.getElementById("recordForm").style.display='inline';
+          document.getElementById("recordIDcontainer").style.display='inline';
+          return;
+        }
+        let result=document.getElementById("recordID").value;
+        fetch(document.getElementById("endpoint").value+'/'+result, {
+        method: 'put',
+        headers: {
+          "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+          },
+        body: `author=${document.getElementById("author").value}&title=${document.getElementById("title").value}`
+        })
+        .then(data => data.json())
+        .then(val => document.getElementById("output").innerText=JSON.stringify(val))
       }
 
       // This function should use fetch to delete one existing entry in the given endpoint.
@@ -118,6 +169,17 @@
       // delete all, only delete one.
       function deleteRecord() {
         // TODO
+        document.getElementById("output").innerText="";
+        document.getElementById("recordForm").style.display='none';
+        document.getElementById("recordIDcontainer").style.display='none';
+        let result = window.prompt("enter post id");
+        fetch(document.getElementById("endpoint").value+'/'+result, {
+        method: 'delete',
+        headers: {
+          "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+          }
+        });
+        document.getElementById("output").innerText="{}";
       }
 
       window.addEventListener('DOMContentLoaded', () => {
